@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FocusList</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="sidebar__top">
+          <div class="brand">
+            <div class="brand__mark">F</div>
+            <div>
+              <strong>FocusList</strong>
+              <span>To-do cá nhân</span>
+            </div>
+          </div>
+
+          <button class="add-task-button" type="button" id="openComposerButton">
+            + Thêm việc
+          </button>
+
+          <label class="sidebar-search">
+            <span class="visually-hidden">Tìm kiếm công việc</span>
+            <input id="searchInput" type="search" placeholder="Tìm công việc..." />
+          </label>
+
+          <nav class="nav-list" id="mainNav">
+            <button class="nav-item active" type="button" data-view="inbox">
+              <span>Inbox</span>
+              <strong id="inboxCount">0</strong>
+            </button>
+            <button class="nav-item" type="button" data-view="today">
+              <span>Today</span>
+              <strong id="todayCount">0</strong>
+            </button>
+            <button class="nav-item" type="button" data-view="upcoming">
+              <span>Upcoming</span>
+              <strong id="upcomingCount">0</strong>
+            </button>
+            <button class="nav-item" type="button" data-view="completed">
+              <span>Completed</span>
+              <strong id="completedCount">0</strong>
+            </button>
+          </nav>
+        </div>
+
+        <div class="sidebar__bottom">
+          <div class="sidebar-section">
+            <div class="sidebar-section__title">
+              <span>Projects</span>
+            </div>
+            <div class="project-list" id="projectList"></div>
+          </div>
+
+          <p class="storage-status" id="storageStatus"></p>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="main-header">
+          <div>
+            <p class="section-label" id="sectionLabel">My tasks</p>
+            <h1 id="viewTitle">Inbox</h1>
+            <p class="view-description" id="viewDescription">
+              Nơi gom mọi việc cần làm để bạn xử lý dần từng cái một.
+            </p>
+          </div>
+
+          <div class="main-actions">
+            <label class="filter-field">
+              <span>Ưu tiên</span>
+              <select id="priorityFilter">
+                <option value="all">Tất cả</option>
+                <option value="urgent">Khẩn cấp</option>
+                <option value="high">Cao</option>
+                <option value="medium">Vừa</option>
+                <option value="low">Thấp</option>
+              </select>
+            </label>
+
+            <button class="secondary-button" type="button" id="clearCompletedButton">
+              Xóa đã xong
+            </button>
+          </div>
+        </header>
+
+        <section class="composer-card" id="composerCard">
+          <div class="composer-card__header">
+            <div>
+              <strong id="composerTitle">Thêm công việc</strong>
+              <p id="composerHint">Tạo nhanh một việc mới và bấm lưu là xong.</p>
+            </div>
+            <button class="text-button hidden" type="button" id="cancelEditButton">
+              Hủy
+            </button>
+          </div>
+
+          <form id="taskForm" class="task-form">
+            <input
+              id="taskTitle"
+              name="title"
+              type="text"
+              maxlength="120"
+              placeholder="Ví dụ: Hoàn thành báo cáo cuối tuần"
+              required
+            />
+
+            <textarea
+              id="taskNotes"
+              name="notes"
+              rows="3"
+              maxlength="280"
+              placeholder="Mô tả ngắn hoặc ghi chú thêm nếu cần"
+            ></textarea>
+
+            <div class="task-form__meta">
+              <label class="field">
+                <span>Project</span>
+                <input
+                  id="taskProject"
+                  name="project"
+                  type="text"
+                  maxlength="40"
+                  list="projectSuggestions"
+                  placeholder="Inbox, Học tập, Cá nhân..."
+                />
+              </label>
+
+              <label class="field">
+                <span>Ưu tiên</span>
+                <select id="taskPriority" name="priority">
+                  <option value="medium">Vừa</option>
+                  <option value="urgent">Khẩn cấp</option>
+                  <option value="high">Cao</option>
+                  <option value="low">Thấp</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Ngày</span>
+                <input id="taskDueDate" name="dueDate" type="date" />
+              </label>
+            </div>
+
+            <div class="task-form__actions">
+              <div class="quick-dates">
+                <button type="button" class="pill-button" data-date-preset="today">Hôm nay</button>
+                <button type="button" class="pill-button" data-date-preset="tomorrow">
+                  Ngày mai
+                </button>
+                <button type="button" class="pill-button" data-date-preset="next-week">
+                  7 ngày nữa
+                </button>
+              </div>
+
+              <button class="primary-button" type="submit" id="submitButton">Lưu việc</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="task-panel">
+          <div class="task-panel__header">
+            <strong id="resultCount">0 công việc</strong>
+            <button class="text-button" type="button" id="toggleCompletedButton">
+              Ẩn việc đã xong
+            </button>
+          </div>
+
+          <div class="empty-state hidden" id="emptyState">
+            <h2 id="emptyTitle">Chưa có công việc nào</h2>
+            <p id="emptyMessage">Thêm việc đầu tiên để bắt đầu danh sách của bạn.</p>
+          </div>
+
+          <div class="task-list" id="taskList" aria-live="polite"></div>
+        </section>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" aria-live="polite" aria-atomic="true"></div>
+    <datalist id="projectSuggestions"></datalist>
+  </body>
+</html>
